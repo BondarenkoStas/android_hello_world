@@ -34,7 +34,7 @@ workflows:
         - ./gradlew bundleRelease
         - |
           # publish the app to Firebase App Distribution
-          aabPath=$(find build -name "*.aab" | head -1)
+          aabPath=$(find app/build -name "*.aab" | head -1)
 
           if [[ -z ${aabPath} ]]
           then
@@ -49,7 +49,7 @@ workflows:
               --key-pass $CM_KEY_ALIAS_PASSWORD
 
             echo "universal apk generated"
-            apkPath=$(find build -name "*.apk" | head -1)
+            apkPath=$(find app/build -name "*.apk" | head -1)
 
             if [[ -z ${apkPath} ]]
             then
