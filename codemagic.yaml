@@ -35,20 +35,12 @@ workflows:
         - ./gradlew bundleRelease -PversionCode=$BUILD_NUMBER -PversionName=1.0.$BUILD_NUMBER
         - |
           # generate universal apk from generated app bundle
-          aabPath=$(find app/build -name "*.aab" | head -1)
-
-          if [[ -z ${aabPath} ]]
-          then
-            echo "No aabs were found, skip universal apk generating"
-          else
-            echo "Found aab at $aabPath"
-            android-app-bundle build-universal-apk \
-              --bundle ${aabPath} \
-              --ks /tmp/keystore.keystore \
-              --ks-pass $CM_KEY_ALIAS_PASSWORD \
-              --ks-key-alias $CM_KEY_ALIAS_USERNAME \
-              --key-pass $CM_KEY_ALIAS_PASSWORD
-          fi
+          android-app-bundle build-universal-apk \
+            --bundle 'app/build/**/*.aab' \
+            --ks /tmp/keystore.keystore \
+            --ks-pass $CM_KEY_ALIAS_PASSWORD \
+            --ks-key-alias $CM_KEY_ALIAS_USERNAME \
+            --key-pass $CM_KEY_ALIAS_PASSWORD
         - |
           # publish the app to Firebase App Distribution
           apkPath=$(find app/build -name "*.apk" | head -1)
