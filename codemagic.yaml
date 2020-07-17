@@ -79,7 +79,7 @@ workflows:
               --group Collaborators \
               --file $apkPath \
               --release-notes 'App submission via Codemagic' \
-              --app "stasio/android example app" \
+              --app stasio/android-example-app \
               --token $APP_CENTER_TOKEN \
               --quiet
           fi
