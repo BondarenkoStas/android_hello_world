@@ -65,7 +65,7 @@ workflows:
           # publish the app to Visual Studio App Center
           echo 'Installing App Center CLI tools'
 
-          npm install appcenter-cli
+          npm install -g appcenter-cli
 
           echo "Find build artifacts"
           apkPath=$(find app/build -name "*.apk" | head -1)
