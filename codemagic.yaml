@@ -32,4 +32,4 @@ workflows:
           EOF
         - ./gradlew bundleRelease
       artifacts:
-        - build/**/outputs/**/*.aab
+        - app/build/**/outputs/**/*.aab
