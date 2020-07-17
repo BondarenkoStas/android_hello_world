@@ -21,7 +21,7 @@ workflows:
           - pattern: 'master'
             include: true
             source: true
-        cancel_pending_builds: true
+        cancel_previous_builds: true
       scripts:
         - ./gradlew bundleRelease
       artifacts:
