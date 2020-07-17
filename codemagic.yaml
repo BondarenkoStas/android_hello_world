@@ -56,10 +56,9 @@ workflows:
           if [[ -z ${apkPath} ]]
           then
             echo "No apk were found, skip publishing to Firebase App Distribution"
-            else
+          else
               echo "Publishing $apkPath to Firebase App Distribution"
               firebase appdistribution:distribute --app "1:717260803432:android:2fa26a4fec7583dd8b5add" --groups "testers" $apkPath
-            fi
           fi
         - |
           # publish the app to Visual Studio App Center
