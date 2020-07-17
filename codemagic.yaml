@@ -32,7 +32,7 @@ workflows:
           keyAlias=$CM_KEY_ALIAS_USERNAME
           storeFile=/tmp/keystore.keystore
           EOF
-        - ./gradlew bundleRelease
+        - ./gradlew bundleRelease -PversionCode=$BUILD_NUMBER -PversionName=1.0.$BUILD_NUMBER
         # - |
         #   # generate universal apk from generated app bundle
         #   aabPath=$(find app/build -name "*.aab" | head -1)

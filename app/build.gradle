@@ -6,6 +6,18 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
+def getMyVersionCode = { ->
+    def code = project.hasProperty('versionCode') ? versionCode.toInteger() : -1
+    println "VersionCode is set to $code"
+    return code
+}
+
+def getMyVersionName = { ->
+    def name = project.hasProperty('versionName') ? versionName : "1.0"
+    println "VersionName is set to $name"
+    return name
+}
+
 
 android {
     compileSdkVersion 29
@@ -14,8 +26,8 @@ android {
         applicationId "io.codemagic.androidhelloworldapp"
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode getMyVersionCode()
+        versionName getMyVersionName()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
