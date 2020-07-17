@@ -33,66 +33,66 @@ workflows:
           storeFile=/tmp/keystore.keystore
           EOF
         - ./gradlew bundleRelease -PversionCode=$BUILD_NUMBER -PversionName=1.0.$BUILD_NUMBER
-        # - |
-        #   # generate universal apk from generated app bundle
-        #   aabPath=$(find app/build -name "*.aab" | head -1)
+        - |
+          # generate universal apk from generated app bundle
+          aabPath=$(find app/build -name "*.aab" | head -1)
 
-        #   if [[ -z ${aabPath} ]]
-        #   then
-        #     echo "No aabs were found, skip universal apk generating"
-        #   else
-        #     echo "Found aab at $aabPath"
-        #     android-app-bundle build-universal-apk \
-        #       --bundle ${aabPath} \
-        #       --ks /tmp/keystore.keystore \
-        #       --ks-pass $CM_KEY_ALIAS_PASSWORD \
-        #       --ks-key-alias $CM_KEY_ALIAS_USERNAME \
-        #       --key-pass $CM_KEY_ALIAS_PASSWORD
-        #   fi
-        # - |
-        #   # publish the app to Firebase App Distribution
-        #   apkPath=$(find app/build -name "*.apk" | head -1)
+          if [[ -z ${aabPath} ]]
+          then
+            echo "No aabs were found, skip universal apk generating"
+          else
+            echo "Found aab at $aabPath"
+            android-app-bundle build-universal-apk \
+              --bundle ${aabPath} \
+              --ks /tmp/keystore.keystore \
+              --ks-pass $CM_KEY_ALIAS_PASSWORD \
+              --ks-key-alias $CM_KEY_ALIAS_USERNAME \
+              --key-pass $CM_KEY_ALIAS_PASSWORD
+          fi
+        - |
+          # publish the app to Firebase App Distribution
+          apkPath=$(find app/build -name "*.apk" | head -1)
 
-        #   if [[ -z ${apkPath} ]]
-        #   then
-        #     echo "No apk were found, skip publishing to Firebase App Distribution"
-        #     else
-        #       echo "Publishing $apkPath to Firebase App Distribution"
-        #       firebase appdistribution:distribute --app "1:717260803432:android:2fa26a4fec7583dd8b5add" --groups "testers" $apkPath
-        #     fi
-        #   fi
-        # - |
-        #   # publish the app to Visual Studio App Center
-        #   echo 'Installing App Center CLI tools'
+          if [[ -z ${apkPath} ]]
+          then
+            echo "No apk were found, skip publishing to Firebase App Distribution"
+            else
+              echo "Publishing $apkPath to Firebase App Distribution"
+              firebase appdistribution:distribute --app "1:717260803432:android:2fa26a4fec7583dd8b5add" --groups "testers" $apkPath
+            fi
+          fi
+        - |
+          # publish the app to Visual Studio App Center
+          echo 'Installing App Center CLI tools'
 
-        #   npm install -g appcenter-cli
+          npm install -g appcenter-cli
 
-        #   echo "Find build artifacts"
-        #   apkPath=$(find app/build -name "*.apk" | head -1)
+          echo "Find build artifacts"
+          apkPath=$(find app/build -name "*.apk" | head -1)
 
-        #   if [[ -z ${apkPath} ]]
-        #   then
-        #     echo "No apks were found, skip publishing to App Center"
-        #   else
-        #     echo "Found apk at $apkPath"
-        #     appcenter distribute release \
-        #       --group Collaborators \
-        #       --file $apkPath \
-        #       --release-notes 'App submission via Codemagic' \
-        #       --app stasio/android-example-app \
-        #       --token $APP_CENTER_TOKEN \
-        #       --quiet
-        #   fi
+          if [[ -z ${apkPath} ]]
+          then
+            echo "No apks were found, skip publishing to App Center"
+          else
+            echo "Found apk at $apkPath"
+            appcenter distribute release \
+              --group Collaborators \
+              --file $apkPath \
+              --release-notes 'App submission via Codemagic' \
+              --app stasio/android-example-app \
+              --token $APP_CENTER_TOKEN \
+              --quiet
+          fi
       artifacts:
         - app/build/**/outputs/**/*.aab
         - app/build/**/*.apk
       publishing:
-        # email:
-        #   recipients:
-        #     - bondarenko.stanislav.96@gmail.com
-        # slack:
-        #   channel: '#dev-slack-publishing-test'
-        #   notify_on_build_start: true
+        email:
+          recipients:
+            - bondarenko.stanislav.96@gmail.com
+        slack:
+          channel: '#dev-slack-publishing-test'
+          notify_on_build_start: true
         google_play:
           credentials: Encrypted(Z0FBQUFBQmZFWmx0RDV0NG1fX0EtUG9oX0hkZWFDU0Q4UkdGVUxZeVhfTFRiMnZ3dGRQUktkVUlxSGcwenBPc2wtSlhjV2lJN0lNQUhSRXJ3OE5OUXFfcDN4ejNVMzRsTlhzclI4eWpLNk1jLVpGNm5uclJlZFVYT3dsZlZUTzVFZFBXcmZreVpoNXFZV2lVVjRteXRhTDVqRU5pZ29idjVrOEgyTWVFR3J1a3R0S3JSb1ltNFFmZ1kyNndmblpwMHJZM2o4cmlPWVh2cXQ1OVRTMjRMSlNyMS00b0RwSzYxRm5pWFlkRXYzUzlrSk40emM5QnNkRkUzdkxVOGtUakhtS0VDMzdUeGVTaU5RUktLYXBoT0dsejhtUWVpdFRVN0xOSXoxMEZvOUZncE52dGpQbkF0REhyc1lPZnlwOFFUV0FTckVldGdhOXIwSlJNQnBlUWtvQS1FS281d2xCOHo4QzMtcFJYa2ljeERIdFc2NnI5Y0NNcDRwR0hDa1ZsaWVpaV9lODI3NE4tMzVfanlxdDJpeVViTkxBWFRoT1BNenlZS3lJcUVaMmltRDI5dldtek1SRGVnYURSd281enVJcEtpUFhjdlNnRnJFaG5yU2phSTJId3hIdDhXVjZRQ19tc1R3cmdueV9uUm5GSnpyNUtRLXlnOHJmNzNlTHFaZExzaFNaS2xadEVkOEhGM1VDWkRWSE1aUVdGS0huZTNaQnZpZHlZRERDWGlZbTItcFpUWHVNbXBYaHhBZUdKal8wa29DQkFYb1lCdkp0cnNSSkszRXBIYXVlZzFXdXhYT0N5QjNGd00xYWpBdXVjRnE4UzZhdnNKWHJJMEVsRFBHZnJiS2JaR1BSNjFsTHFQcG9uNXhSSTQ2TFBHYmc3UmRUSTkyTy15LXM4aDN3WVNYcmFjbXpYS0NjeFVRanVfQ2NvVGtNRmJsTHZCbDlfWi0tdVlUWEdieFdBYzZybTkyRUdWc1VISXZ1eVlfVVVnNlowUXQ3Sk1WVzA1U0FKTGdLZml1MTlqTWpSNnJuZl96Q1kybnp5V3VnVEd2Y1RoZlVHbjgyc2RLUy0ydzdOeEdWRk1pSmZHU05ydXdCRVdBZmVtd0E2emlaRnl2c2xKODFwWkdoNW1BeUpJSTRLMXVURHFnRjluTUdUX0dfZHRFaENmaWR4ZmN1cXlzQ0pKYUEwYmpvTXJKQnBFd1NlUUR5VzJmUFY5NXkyb3ZuMElNemU5VlV3b0JMM3RKZkhpMU8ySm02MHVkeTdCUmV1MjBwNnZReUIyN0NqcHFYTHJldzlhVlJScS03OVZ2RUZTRU84Ylg1a2VJMXdINmhhV0x2QmlrS0JLclJSWFREUUxadFNFWmdUS3hMRnMxWUJiRjJSSElBQ2VtZl9iZW9Ha2lGcnFGX2ZZaDBNbjZFbTQ2OFlYSFozejFONTNtc29CTmdxYlhtRmNiajdKRHMyam9laW9VTHVmaWs2c29TTEh1cGJ4LWZtSlhxWFotQlAxUkR2MFo5MGpXMkpiTGR4bDdnNTg5aVNNUzN0RVZicXZ0OGs4ZXo4aXJRVFZmU21kbE05ZVp2S0JaRl9ScnpKTFlhaU1mTGRSMTRLUzBZVFRXV0NaZGlHUlhQQ0dtM1ZXQkNwbzVYUW1PY0FEZFQyY01qQVdCZTkxTXJjTTQyTXVYbUZ4UlhHc1R6dEZzZUFKT2IzWkVFU2s0YnBVRmlUdTdCcTk5SzFucGF6MDVqWS1tY1ZxRzVfekdJUnhQMUh3MVdscGlyRjVlVWgyeHdlMzlUbVFUZ05MV28weGpLMFNXQnFsQ2F0STVwX2pwVERZOWR6UkJQRzVsSzYyeC0xTzNtUmgwVWpmS190OFpNdzM5NlRhWEt5WUdqZFZFQkUzZzFUZUtHQWM0dURxb0JHaDF0UzVwUklMSURyU0xNMkh0UUpJMU5hbFRqNElMYjFwTWpKUFRMNnByYy1taHRKaWlsYUxNXzczaVd6blgtUGFoeDZic2tGbDFGbzd2cmRrVGh1N0hqUnBpLXJnM3d0ek5vTW9RdDRFQVJJQmVaUXo1LXRkbXJOQlgzeEpjVUxOQVZEdXZCUTkzdUwtaVI2dkZzWXN0VGk1Qkd6TjlsYmNfZkhKRkwxVms5M1ZyQUljVHdjWjFNR2t3Q2YyZ2JfbkRRMzh6WElHbUVacE4tQVoyNzhSOFlCblQxQzFkUmQyS0pvU2FyT3lNQ3V6RnRDT2lncjI1dWVLTkJ3UGI2WnZSUUJKWmZHWVp3LUFSQ2lqeHZWWUQyTWJxVjFVUHBtUG8tNlRGU2xLTEdVOE11VGRHSy0tS0lidzl5OTF2NWR4UHF1WFBwTWJIdFdtRjlHWHJTWXZEdzktTFFBVzhKcVhrY1d5RWdlQ2dPVnM5WHNxSGtVNW9EQTctY3VrOGNsQ1FnUC1HQzBWZ1I5V0pyR0N4WFg3dnE2REJrS19GTDd1VTRRbUZhZUQ5Wi01bURaQUxyV0lma05EZERrNGtzcE9Hd045UlFOdEZoZW8wVDBGTW9VYlJfLWdIN1dCN1FFdGRiR1NNWDBOaENHSmF5cUp4QndicHQ4UTk1Y0hSUU5qNVhsMHFSdWVZMVUyUkV4WWJTT1ZzSmhfWG15MUNvYjNaUW9sOXVONTh6UUNSSk9SMUoyRzlyUVRObkVvU1c4M3JsYk9KbG9UNjJjWmFHY2RPSjA0UnlieEU0b2FtRkhISEFIc2hobGlqRld2ZXhkV3NSTnNib1JRb0V1WTlSdmpad3dHWjctS1BHLUVNbkUxY28xeWJ6ZE1LemxOd0JWbTNELVp4bURvWEYwY3VISkNORWdHUGJEVjdpQjFQMmxNMDZaWUdDNFE0TmwzUkt0dU9SdE1qOG5tb2s3TFFJS2VfT2NfbzZNTHhlSEdtU2xFVkNpdUUtcFdhN0l6aF9aajNOdWtBdERibWVMUzhFZE1nQ1NDaE42aDVEOGZtRXJsakNwTDRFTlhLLVAxdlpKWVQ1aVJESzRSaWNfOFZkSFg2RUdiNXU0eU9zLUdKNDQ0Zy1XcHhoWS1tUFpsSXg2blhUVmxpSnNRellESm53N2pGYjlNTklka3pzajBKVGFPV3RMclVuRmJJYUhZMkhKQmJJN01yRmc2SVpvYlZSQTJzZUhEV1NVenNuZTl1SVQ0V0FrUWVLZFF2QlNxdHotdzFDR3ZFSnVXM1Vnb0ZJT2lQblU4WmtuU2huZk9nc0J6Z3NjQzhCTE9ZekhkLXRFVUVac2sxUjZXcTlzMHFBSmhlWEJCemU5TVlFNkJZV0pDNGFncG1oQzJvSnhncVhqZG5KdlIxWTJSQ2ZhYmhDdWpoNVVtdEl2THdYNm1wM1pVUU5LVE5xaGEwdzJJYW5CRlVpaGlXMEVFVEdkTzBLblRPSDB6di1KZlotNWR3c0poNTE5MWVQNmdCR2c1VkZRTVRSRzJaaW80U3dLVWdhQzAzMUk5X05tbW95eExkNGRzeVlHXzZ6ei1Tb0JxblJfcUtudWViNkxoM3lHd3k0SENneEpZQjIzMG1VUjNZeGxVM3dHTVBmVTlJREpVZHRsWUpaQXhNdTZRa1EwMHVOZUpiQTd3Yk9wemZha0NBTjYzbk9ZWUc3OGlwZlhJRFAyWVNucWRNSXhuX3YyRVBRa2dIalkwWGlpY0o1bG94Z3FlMWtLMk5Ldml2dDAybDNNeUdQR3BWSUI0d3dkclk1cXhnWm5KckpwQkFaWXlNeG5SeXlmaXNmOTFrTzFhT2RUM2p4S3pkRmhrUXpJS2w0S3NWWERDdHBjV24tNEJ2ZlBkV0VjN2FNQ3lyVTBGWXhNQ3JLRlpqVERXXzVXMnhRdUxrSDVOUzh6N3dHSC1SRE11QUxOUVpVdnptU0pmM2hiVGFQTnN0ejZJcmo0TTZoNC1aZUQyVjlkNUFYa0d1bGVuams3U1dQZExkdVBvWXZLQUYzeFFJSnVnLUZzZjl2c1ZBNS0zMUh2aUNpcW03dzRrLVJwTG5idDRrZzRsRnNOWUwxNy10b0ZSOHk1cGVZbTYxTXByNWJ1Z2VmN2pFWXpJQnkzZGpheVkwZ2FxLWtzSG5WbE5qQWtVZ2JNc1doZmdiMXFTNjE3VWpSSjR3bUlMUjIxMy00NlBWcWdKSGxTWndSNlFaSWd0bkJHTlc1TUc2cmh2MEQ3UzRueFdHbkZ3WExOR1dPWmdKTFlsaUlDRDBlVzF1TGVXdEV0ampJRW91YkFfWFVRbjVFdm11UUt4aXR3RmZiT2VUb2RZdU55R2MxVjM3MXpaOWl6cDdaeG1nTXdaSFJmTGRhdHQ5YWJrQ3AwcjlVU3NrUkN1UzdTTXV1TUFyenpIZzJHS3puRGtXbWNic0tkb2NqZ1Y4cmNTTThaMkNwTUJ4R0tiZEpCTkNvTm9JWmI4NnRFQWdZX2pmOU9kSHUyekpFMDlXNDJBSERqNWdSU1RBSEl1NzlkSGpZVlIwSkFENGhoM0ZpNkFtRkpBWF96cVJWMGpXUGF0b0k4U0UtRFhVS09Lajc3WlRuVy1mQ240UktuN194d2YxMERBZXJGelFiZ1piRG1md3V1R29nRUFXb3RrcnBFT21IVklWVF9lV0J3WkFTS2RWQ000NjdLMGRnWGRPSlJGd01zQkN3QkdGSFZLTDNJRnVHaVVaWkhpbnVTOGl3S1pIUjcwREM3ekxVMFdBaHVvd19BZWFvbURmMlF4SU5Ic1ZHRmJrTml2a2tiMEVkX3FCUTJGSV82YnZSQWpiZ2FjVzlkYVM5bXdUR0JNY3pER1JIb2VmZ3p3T1E5NFNIWTZXMlhmcUpRMXBHT3hLeTdjTUVib1c4WkZDLXI4eTBDQTR5NDJVaWxTM0dXeXd1STJuaVA1dWFad0tOcFI5M2xVRWZqdEctUXNQWHFGQ1FtbjBLb3lvWW9SSVlnaU9jR09lLTNyZlNIUTBGb2ZLdUdnYklCMVQ2bDRCeHN0ZTBKZUpMUzJUTTUzOTFEZEpSMUF4OXZpY2wtTkM0TDRpUWRtSjloMUo2aHROUDlveXE1SlhBVm5tWFRGOGd5Ykh1c3ZRVGRrRTJjSld5VzZnVUpBYmZmV0NLT3dKU3BqUXJCNFc0akExMGxHS3I1RkhvYlpCLVhXb2tyNV9PMU1Ba3phUjhiVzYxZTYwVWkxNUVDb1BvMlV3MmhwVHlwdVkySFRYWWJQRTZPeGR2TFk4R0w2NG85UFI5TmFUcDVRSWRjWndlR1FpSjRhcnR3WWhGVDFid3BNYWJOWWpDeEpCbjh5dU8yRVQyRnR0NTZlOVlkLTJpdkdBWm9vZDNpRl9vaGc4alQwTWZNZm1tMmZtUTFjcE5VWG5GNzhBTGI0NFUxQ3NtamFoUGVnNkFzcXgyNjd3Rl8zUHg2ZkNhN0ROSVhGSUpZYWhzSFMxb3NQcUN6RDNodk9YZ3pCNDdQdFNtOGwyTkZBWFRwUGtqbTFOcUFEcml0YVV4d3llXy1wbzM4WFZvY1JJWmFGZ2FYZkc2a01JZUdERjdQZ1ZyeGQxUFNIUmJ1bVAtWDJXTHdtMFlvSTIyNE9veXItLTY3M0g0S3JMZEhkVTRNUGo3MTBCcGpvVkI1UmcwVGg3VXV0Snd0TEhPUkpvT1ZCZ0p0NkxCdkxIeU95RDhEM25oS290UEozYjZyWGJwMEVPV2JhblRtMzRHbk5ub1U2elpEUEY3VjVTYjFPTzRPODlyTw==)
           track: internal
