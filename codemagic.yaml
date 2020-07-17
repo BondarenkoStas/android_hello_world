@@ -9,8 +9,6 @@ workflows:
           CM_KEYSTORE_PASSWORD: Encrypted(Z0FBQUFBQmZFV1lQbjVJZDVkMFFySEM1UjVWanJhNkRKdlFybUVjMFN1MXZ0a3I1VG5LRDI0OS1tZmFhcmI4a2Z5bEVyckVSUmpiOC1lYzRUekhJODl4dUttZFpySlRGYlE9PQ==)
           CM_KEY_ALIAS_PASSWORD: Encrypted(Z0FBQUFBQmZFV1lQbjVJZDVkMFFySEM1UjVWanJhNkRKdlFybUVjMFN1MXZ0a3I1VG5LRDI0OS1tZmFhcmI4a2Z5bEVyckVSUmpiOC1lYzRUekhJODl4dUttZFpySlRGYlE9PQ==)
           CM_KEY_ALIAS_USERNAME: Encrypted(Z0FBQUFBQmZFV1llemV5LUdSN2hUMWlteVU2b0tkNndXUG1ObWVXeWtVelVjdnJtUFdRWXljV3B2bU5BMXFTeHpiUEwyWHpnN1pORHNnZ1pWdUs1ZDhLSXE3dUZVejN2RUE9PQ==)
-        flutter: stable
-        xcode: latest
       cache:
         cache_paths:
           - $HOME/.gradle/caches
@@ -26,7 +24,7 @@ workflows:
         - |
           # set up key.properties
           echo $CM_KEYSTORE | base64 --decode > /tmp/keystore.keystore
-          cat >> "$FCI_BUILD_DIR/project_directory/android/key.properties" <<EOF
+          cat >> "$FCI_BUILD_DIR/key.properties" <<EOF
           storePassword=$CM_KEYSTORE_PASSWORD
           keyPassword=$CM_KEY_ALIAS_PASSWORD
           keyAlias=$CM_KEY_ALIAS_USERNAME
