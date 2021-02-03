@@ -60,6 +60,7 @@ workflows:
       artifacts:
         - app/build/**/outputs/**/*.aab
         - app/build/**/*.apk
+        - app/build/**/*.apks
 #       publishing:
 #         email:
 #           recipients:
