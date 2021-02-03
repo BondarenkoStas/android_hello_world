@@ -30,7 +30,9 @@ workflows:
           keyAlias=$CM_KEY_ALIAS_USERNAME
           storeFile=/tmp/keystore.keystore
           EOF
-        - ./gradlew bundleRelease -PversionCode=$BUILD_NUMBER -PversionName=1.0.$BUILD_NUMBER
+        - |
+          chmod +x gradlew
+          ./gradlew bundleRelease -PversionCode=$BUILD_NUMBER -PversionName=1.0.$BUILD_NUMBER
         - |
           # generate universal apk from generated app bundle
           android-app-bundle build-universal-apk \
