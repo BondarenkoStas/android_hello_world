@@ -23,11 +23,7 @@ workflows:
           chmod +x gradlew
           echo $KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH
           ./gradlew bundleRelease -PversionCode=$BUILD_NUMBER -PversionName=1.0.$BUILD_NUMBER
-#         - android-app-bundle build-universal-apk \--bundle 'app/build/**/*.aab' \
-#             --ks /tmp/keystore.keystore \
-#             --ks-pass $CM_KEY_ALIAS_PASSWORD \
-#             --ks-key-alias $CM_KEY_ALIAS_USERNAME \
-#             --key-pass $CM_KEY_ALIAS_PASSWORD
+        - android-app-bundle build-apks --ks "$FCI_KEYSTORE_PATH" --ks-pass "$FCI_KEYSTORE_PASSWORD" --ks-key-alias "$FCI_KEY_ALIAS" --key-pass "$FCI_KEY_PASSWORD"
 #         - |
 #           # publish the app to Firebase App Distribution
 #           apkPath=$(find app/build -name "*.apk" | head -1)
@@ -63,7 +59,7 @@ workflows:
 #           fi
       artifacts:
         - app/build/**/outputs/**/*.aab
-#         - app/build/**/*.apk
+        - app/build/**/*.apk
 #       publishing:
 #         email:
 #           recipients:
