@@ -61,7 +61,7 @@ workflows:
         - app/build/**/outputs/**/*.aab
         - app/build/**/*.apk
         - app/build/**/*.apks
-#       publishing:
+      publishing:
 #         email:
 #           recipients:
 #             - bondarenko.stanislav.96@gmail.com
