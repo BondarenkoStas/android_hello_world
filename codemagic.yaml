@@ -20,7 +20,7 @@ workflows:
 #         cancel_previous_builds: true
       scripts:
         - echo $LATEST_GOOGLE_PLAY_VERSION_CODE
-        - sleep 999
+        - cat '~/.bash_profile'
         - |
           chmod +x gradlew
           echo $KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH
