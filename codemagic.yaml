@@ -21,6 +21,7 @@ workflows:
       scripts:
         - cat $HOME/.bash_profile
         - cat $HOME/.zshrc
+        - ls ~
         - |
           set -x
           echo $LATEST_GOOGLE_PLAY_VERSION_CODE
