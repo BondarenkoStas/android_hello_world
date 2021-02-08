@@ -20,8 +20,9 @@ workflows:
 #         cancel_previous_builds: true
       scripts:
         - cat $HOME/.bash_profile
+        - cat $HOME/.zshrc
         - |
-          set +x
+          set -x
           echo $LATEST_GOOGLE_PLAY_VERSION_CODE
           echo $FCI_BUILD_ID
           env
