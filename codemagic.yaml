@@ -19,7 +19,7 @@ workflows:
 #             source: true
 #         cancel_previous_builds: true
       scripts:
-        - echo $GOOGLE_PLAY_VERSION_CODE
+        - echo $LATEST_GOOGLE_PLAY_VERSION_CODE
         - |
           chmod +x gradlew
           echo $KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH
