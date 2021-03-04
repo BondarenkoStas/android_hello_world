@@ -1,23 +1,14 @@
 apply plugin: 'com.android.application'
 
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
-
+// get version code from the specified property argument `-PversionCode` during the build call
 def getMyVersionCode = { ->
-    def code = project.hasProperty('versionCode') ? versionCode.toInteger() : -1
-    println "VersionCode is set to $code"
-    return code
+    return project.hasProperty('versionCode') ? versionCode.toInteger() : -1
 }
 
+// get version name from the specified property argument `-PversionName` during the build call
 def getMyVersionName = { ->
-    def name = project.hasProperty('versionName') ? versionName : "1.0"
-    println "VersionName is set to $name"
-    return name
+    return project.hasProperty('versionName') ? versionName : "1.0"
 }
-
 
 android {
     compileSdkVersion 29
@@ -32,7 +23,7 @@ android {
     }
     signingConfigs {
         release {
-            if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
+            if (System.getenv()["CI"]) { // CI=true is exported by Codemagic. An alternative would be to use "CODEMAGIC" env var
                 storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
                 storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
                 keyAlias System.getenv()["FCI_KEY_ALIAS"]
