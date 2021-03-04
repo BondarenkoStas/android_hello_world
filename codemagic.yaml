@@ -14,7 +14,15 @@ workflows:
         script: |
           echo $KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH # echo keystore to a file to be used in signingConfigs as file(System.getenv()["FCI_KEYSTORE_PATH"])
       - name: Build
-        script: ./gradlew bundleRelease
+        script: |
+          LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number --package-name 'io.codemagic.androidhelloworldapp')
+          if [ -z LATEST_BUILD_NUMBER ]; then
+            # fallback in case no build number was found from google play. Alternatively, you can `exit 0` to fail the builds
+            echo "VERSION_CODE=$BUILD_NUMBEER" > version.properties
+          else
+            echo "VERSION_CODE=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))" > version.properties
+
+          ./gradlew bundleRelease
     artifacts:
       - app/build/**/outputs/**/*.aab
     publishing:
