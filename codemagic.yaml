@@ -15,10 +15,8 @@ workflows:
           echo $KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH # echo keystore to a file to be used in signingConfigs as file(System.getenv()["FCI_KEYSTORE_PATH"])
       - name: Build
         script: |
-          LATEST_BUILD_NUMBER=$(google-play get-latest-build-number --package-name 'io.codemagic.androidhelloworldapp' --tracks internal)
-
-          # provide build number and version through project properties
-          ./gradlew bundleRelease -PversionCode=$(($LATEST_BUILD_NUMBER + 1)) -PversionName=1.0.$(($LATEST_BUILD_NUMBER + 1))
+          LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number --package-name 'io.codemagic.androidhelloworldapp')
+          ./gradlew bundleRelease
     artifacts:
       - app/build/**/outputs/**/*.aab
     publishing:

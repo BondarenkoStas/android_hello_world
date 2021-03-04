@@ -1,24 +1,16 @@
 apply plugin: 'com.android.application'
 
-// get version code from the specified property argument `-PversionCode` during the build call
-def getMyVersionCode = { ->
-    return project.hasProperty('versionCode') ? versionCode.toInteger() : -1
-}
-
-// get version name from the specified property argument `-PversionName` during the build call
-def getMyVersionName = { ->
-    return project.hasProperty('versionName') ? versionName : "1.0"
-}
-
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+    // try to get build number from `LATEST_GOOGLE_PLAY_BUILD_NUMBER` env var. If not specified, then from `BUILD_NUMBER` env var, else 0
+    def latestGooglePlayBuildNumber = Integer.valueOf(System.env.LATEST_GOOGLE_PLAY_BUILD_NUMBER ?: System.env.BUILD_NUMBER ?: 0)
     defaultConfig {
         applicationId "io.codemagic.androidhelloworldapp"
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode getMyVersionCode()
-        versionName getMyVersionName()
+        versionCode latestGooglePlayBuildNumber + 1
+        versionName "1.0." + String.valueOf(latestGooglePlayBuildNumber + 1)
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
