@@ -23,7 +23,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 29
         versionCode code
-        versionName "1.0" + code.toString()
+        versionName "1.0." + code.toString()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
