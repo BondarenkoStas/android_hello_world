@@ -12,14 +12,14 @@ workflows:
     scripts:
       - name: Prepare code signing
         script: |
-          echo $KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH # echo keystore to a file to be used in signingConfigs as file(System.getenv()["FCI_KEYSTORE_PATH"])
+          echo $KEYSTORE | base64 --decode > $KEYSTORE_PATH
       - name: Build
         script: |
           export LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number --package-name 'io.codemagic.androidhelloworldapp')
           ./gradlew bundleRelease
     artifacts:
       - app/build/**/outputs/**/*.aab
-    # publishing:
-    #   google_play:
-    #     credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-    #     track: internal
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
