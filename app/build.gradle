@@ -5,9 +5,8 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         def applicationId = "io.codemagic.androidhelloworldapp"
-        def latestGooglePlayBuildNumber = "google-play get-latest-build-number --package-name " + applicationId + " -s".execute().text
-        def updatedBuildNumber = latestGooglePlayBuildNumber.toInteger() + 1 ?: 1
-        println latestGooglePlayBuildNumber
+        def latestGooglePlayBuildNumber = "google-play get-latest-build-number --package-name " + applicationId.execute().text
+        def updatedBuildNumber = latestGooglePlayBuildNumber.toInteger() + 1 // will fail the build if latestGooglePlayBuildNumber is not found
 
         applicationId applicationId
         minSdkVersion 16
@@ -19,10 +18,10 @@ android {
     signingConfigs {
         release {
             if (System.getenv()["CI"]) { // CI=true is exported by Codemagic. An alternative would be to use "CODEMAGIC" env var
-                storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
-                storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
-                keyAlias System.getenv()["FCI_KEY_ALIAS"]
-                keyPassword System.getenv()["FCI_KEY_PASSWORD"]
+                storeFile file(System.getenv()["KEYSTORE_PATH"])
+                storePassword System.getenv()["KEYSTORE_PASSWORD"]
+                keyAlias System.getenv()["KEY_ALIAS"]
+                keyPassword System.getenv()["KEY_PASSWORD"]
             } else {
                 storeFile file("/path/to/local/myreleasekey.keystore")
                 storePassword "password"
