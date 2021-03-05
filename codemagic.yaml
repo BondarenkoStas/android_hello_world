@@ -12,15 +12,22 @@ workflows:
     scripts:
       - name: Prepare code signing
         script: |
-          echo $KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH # echo keystore to a file to be used in signingConfigs as file(System.getenv()["FCI_KEYSTORE_PATH"])
+          echo $KEYSTORE | base64 --decode > $KEYSTORE_PATH # echo keystore to a file to be used in signingConfigs as file(System.getenv()["FCI_KEYSTORE_PATH"])
+      - name: Google play cli
+        script: |
+          pip install git+https://github.com/codemagic-ci-cd/cli-tools@feature/google_play
       - name: Build
         script: |
           LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number --package-name 'io.codemagic.androidhelloworldapp')
           if [ -z LATEST_BUILD_NUMBER ]; then
             # fallback in case no build number was found from google play. Alternatively, you can `exit 0` to fail the builds
-            echo "VERSION_CODE=$BUILD_NUMBEER" > version.properties
+            echo "VERSION_CODE=$BUILD_NUMBEER" > app/version.properties
           else
-            echo "VERSION_CODE=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))" > version.properties
+            echo "VERSION_CODE=$(($LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))" > app/version.properties
+          fi
+
+          # double check
+          cat app/version.properties
 
           ./gradlew bundleRelease
     artifacts:
