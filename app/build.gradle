@@ -5,10 +5,12 @@ android {
     buildToolsVersion "29.0.2"
     defaultConfig {
         def applicationId = "io.codemagic.androidhelloworldapp"
-        def latestGooglePlayBuildNumber = "google-play get-latest-build-number --package-name $applicationId".execute().text
+        def command = "google-play get-latest-build-number --package-name $applicationId"
+        println(command)
+        def latestGooglePlayBuildNumber = command.execute().text
         def updatedBuildNumber = latestGooglePlayBuildNumber.toInteger() + 1 // will fail the build if latestGooglePlayBuildNumber is not found
 
-        applicationId applicationId
+        applicationId $applicationId
         minSdkVersion 16
         targetSdkVersion 29
         versionCode updatedBuildNumber
