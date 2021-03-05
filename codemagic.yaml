@@ -13,9 +13,6 @@ workflows:
       - name: Prepare code signing
         script: |
           echo $KEYSTORE | base64 --decode > $KEYSTORE_PATH
-      - name: Google play cli
-        script: |
-          pip install git+https://github.com/codemagic-ci-cd/cli-tools@feature/google_play
       - name: Get build version code
         script: |
           set -x
